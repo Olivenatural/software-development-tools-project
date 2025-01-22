@@ -4,6 +4,8 @@ import plotly.express as px
 import streamlit as st
 
 data = pd.read_csv('WHR2024.csv')
+df = data.copy()
+
 
 # Data Cleaning Section
 df.isnull().sum()
@@ -41,13 +43,28 @@ if show_histogram:
     fig = px.histogram(data, x=x_axis, title=f"Histogram of {x_axis}")
     st.plotly_chart(fig)
 
+import streamlit as st
+
+# Add a slider to control the number of bins for the histogram with a unique key
+bins = st.slider("Select number of bins", min_value=5, max_value=50, value=20, key="bin_slider")
+
+# Create the histogram with the selected number of bins
+fig = px.histogram(df, 
+                   x="Ladder score", 
+                   title="Distribution of Happiness Scores", 
+                   labels={"Ladder score": "Happiness Score (Ladder Score)"}, 
+                   nbins=bins)
+
+# Show the plot in Streamlit
+fig.show()
+
 # Show the scatter plot if the checkbox  is checked
 if show_scatter:
     fig_scatter = px.scatter(data, x=x_axis, y='Ladder score', title=f"Scatter Plot: {x_axis} vs Ladder Score")
     st.plotly_chart(fig_scatter)    
 
-# Add a slider to control the number of bins for the histogram
-bins = st.slider("Select number of bins", min_value=5, max_value=50, value=20)
+# Add a slider to control the number of bins for the histogram with a unique key
+bins = st.slider("Select number of bins", min_value=5, max_value=50, value=20, key="histogram_bins")
 
 # Create the histogram with the selected number of bins
 fig = px.histogram(df, 
