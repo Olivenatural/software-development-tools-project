@@ -1,9 +1,24 @@
-import streamlit as st
+# Data Loading Section
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 
-# Load data
 data = pd.read_csv('WHR2024.csv')
+
+# Data Cleaning Section
+df.isnull().sum()
+
+# Filling missing values with the mean for the selected columns
+df['Explained by: Log GDP per capita'] = df['Explained by: Log GDP per capita'].fillna(df['Explained by: Log GDP per capita'].mean())
+df['Explained by: Social support'] = df['Explained by: Social support'].fillna(df['Explained by: Social support'].mean())
+df['Explained by: Healthy life expectancy'] = df['Explained by: Healthy life expectancy'].fillna(df['Explained by: Healthy life expectancy'].mean())
+df['Explained by: Freedom to make life choices'] = df['Explained by: Freedom to make life choices'].fillna(df['Explained by: Freedom to make life choices'].mean())
+df['Explained by: Generosity'] = df['Explained by: Generosity'].fillna(df['Explained by: Generosity'].mean())
+df['Explained by: Perceptions of corruption'] = df['Explained by: Perceptions of corruption'].fillna(df['Explained by: Perceptions of corruption'].mean())
+df['Dystopia + residual'] = df['Dystopia + residual'].fillna(df['Dystopia + residual'].mean())
+
+
+# Visualization Section
 
 # A header for Streamlit app
 st.header("World Happiness Report Data Visualizations")
@@ -31,3 +46,15 @@ if show_scatter:
     fig_scatter = px.scatter(data, x=x_axis, y='Ladder score', title=f"Scatter Plot: {x_axis} vs Ladder Score")
     st.plotly_chart(fig_scatter)    
 
+# Add a slider to control the number of bins for the histogram
+bins = st.slider("Select number of bins", min_value=5, max_value=50, value=20)
+
+# Create the histogram with the selected number of bins
+fig = px.histogram(df, 
+                   x="Ladder score", 
+                   title="Distribution of Happiness Scores", 
+                   labels={"Ladder score": "Happiness Score (Ladder Score)"}, 
+                   nbins=bins)
+
+# Show the plot in Streamlit
+st.plotly_chart(fig)
